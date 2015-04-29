@@ -5,12 +5,13 @@
  *      Author: BrentYoung
  */
 
+#include "main.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <pthread.h>
 
-static const int size = 10;
 
 int gen_rand(int num) {
 	if (num == 0) {
@@ -53,6 +54,19 @@ void multiplyRow(int matrix[][size], int matrix2[][size], int row, int finalMatr
 	}
 }
 
+void *workMethod(void * data1) {
+
+	struct data* theData = data1;
+//	int row = ((struct data*)data1)->row;
+//	int* matrix1[][size] = (&(struct data *)data1)->matrix1;
+//	int* matrix2[][size] = ((struct data *)data1)->matrix2;
+//	int* finalMatrix[][size] = ((struct data *)data1)->finalMatrix;
+
+	multiplyRow(theData->matrix1, theData->matrix2, theData->row, theData->finalMatrix);
+
+	return NULL;
+}
+
 void loadMatrix(int matrix[][size]) {
 	int col = 0;
 	int row = 0;
@@ -66,6 +80,32 @@ void loadMatrix(int matrix[][size]) {
 		}
 		row++;
 	}
+}
+
+int createThreads(int matrix[][size], int matrix2[][size], int finalMatrix[][size]) {
+	pthread_t threads[num_cores];
+	int row;
+	int numThreadsCreated = 0;
+
+	/*the following 5 lines demonstrates how to create 1 thread to calculate C[0][0], you
+			will need to create a loop for all of C's cells*/
+	int i;
+	for (i = 0; i < num_cores; i++) {
+		struct data *data1 = (struct data *)malloc(sizeof(struct data));
+		data1->matrix1 = matrix;
+		data1->matrix2 = matrix2;
+		data1->finalMatrix = finalMatrix;
+		data1->row = row++; //assign the row of C for thread to calculate
+		pthread_create(&threads[0], NULL, workMethod, data1);
+		numThreadsCreated++;
+	}
+
+	int j;
+	for(j=0; j < numThreadsCreated; j++) {
+				pthread_join( threads[j], NULL);
+	}
+
+	return numThreadsCreated;
 }
 
 
@@ -107,6 +147,16 @@ int main() {
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("Time to completion (serial): %2.10f\n", cpu_time_used);
 
+
+	//Threaded version
+	int rowsCompleted = 0;
+	while (rowsCompleted < size) {
+
+		rowsCompleted += createThreads(matrix1, matrix2, finalMatrix2);
+
+	}
+	printf("Threaded Matrix: \n");
+	printMatrix(finalMatrix2);
 
 	return 0;
 }

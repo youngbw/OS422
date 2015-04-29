@@ -1,0 +1,51 @@
+/*
+ * main.c
+ *
+ *  Created on: Apr 29, 2015
+ *      Author: BrentYoung
+ */
+
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+static const int size = 4000;
+
+int multiplyRow(int row) {
+	int col = 0;
+	int num = 0;
+
+	return num;
+}
+
+void loadMatrix(int matrix[][size]) {
+	int col = 0;
+	int row = 0;
+
+	while (row < size) {
+		while (col < size) {
+			matrix[row][col++] = random();
+			printf("%d ", matrix[row][col]);
+		}
+		row++;
+		printf("\n");
+	}
+}
+
+
+int main() {
+
+	int row = 0;
+
+	int matrix1[size][size];
+	int matrix2[size][size];
+
+//	int finalMatrix[size][size];
+//	int finalMatrix2[size][size];
+
+	loadMatrix(matrix1);
+	loadMatrix(matrix2);
+
+
+	return 0;
+}

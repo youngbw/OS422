@@ -71,12 +71,7 @@ void loadMatrix(int matrix[][size]) {
 
 int main() {
 
-	clock_t start, end;
-	double cpu_time_used;
-
-
-
-
+	int row = 0;
 
 	int matrix1[size][size];
 	int matrix2[size][size];
@@ -95,18 +90,11 @@ int main() {
 
 	//serial
 	int i;
-	start = clock();
 	for (i = 0; i < size; i++) {
 		multiplyRow(matrix1, matrix2, i, finalMatrix);
 	}
-	end = clock();
 	printf("Serial final matrix: \n");
 	printMatrix(finalMatrix);
-
-	//Not a good measure
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("Time to completion (serial): %2.10f\n", cpu_time_used);
-
 
 	return 0;
 }

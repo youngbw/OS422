@@ -124,12 +124,6 @@ void runThreadedVersion(int numThreads) {
 }
 
 int main(int argc, char* argv[]) {
-	int threads = atoi(argv[1]);
-
-	if (threads > size) {
-		printf("Threads greater than the size of the matrix\n");
-		return 0;
-	}
 
 	loadMatrix(matrix1);
 	loadMatrix(matrix2);
@@ -140,7 +134,7 @@ int main(int argc, char* argv[]) {
 	printf("Second Matrix\n");
 	printMatrix(matrix2);
 
-
+	int threads = atoi(argv[1]);
 	runThreadedVersion(threads);
 
 

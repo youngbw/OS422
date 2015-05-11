@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
 	int threads = atoi(argv[1]);
 
 	if (threads > size) {
-		printf("Threads greater than the size of the matrix\n");
-		return 0;
+		printf("Threads greater than the size of the matrix");
+		return;
 	}
 
 	loadMatrix(matrix1);

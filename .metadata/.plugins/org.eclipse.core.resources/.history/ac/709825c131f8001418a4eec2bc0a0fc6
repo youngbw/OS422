@@ -66,11 +66,11 @@ void multiplyRow(int row) {
 
 void *workMethod(void * rowNum) {
 
-	int row = (int)rowNum;
 	int i;
-	for (i = row; i < row + theSize && row < size; i++) {
+	for (i = startRow; i < startRow + theSize && (int)rowNum < size; i++) {
 		multiplyRow(i);
 	}
+
 	return NULL;
 }
 

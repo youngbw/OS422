@@ -9,14 +9,14 @@
 #define MAIN_H_
 
 
-static const int size = 2000;
+static const int size = 5;
 
 
 int gen_rand(int num);
 
 void printMatrix(int matrix[][size]);
 
-void multiplyRow(int row);
+void multiplyRow(int matrix[][size], int matrix2[][size], int row, int finalMatrix[][size]);
 
 void loadMatrix(int matrix[][size]);
 

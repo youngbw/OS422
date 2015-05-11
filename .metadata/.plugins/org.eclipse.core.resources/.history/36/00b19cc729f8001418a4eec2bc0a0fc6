@@ -9,7 +9,7 @@
 #define MAIN_H_
 
 
-static const int size = 2000;
+static const int size = 16;
 
 
 int gen_rand(int num);

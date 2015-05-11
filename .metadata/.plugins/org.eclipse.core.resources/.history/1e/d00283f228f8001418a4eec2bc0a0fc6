@@ -46,7 +46,7 @@ void printMatrix(int matrix[][size]) {
 	printf("\n");
 }
 
-void multiplyRow(int row) {
+void multiplyRow(int matrix[][size], int matrix2[][size], int row, int finalMatrix[][size]) {
 
 	int col = 0;
 	int num = 0;
@@ -55,7 +55,7 @@ void multiplyRow(int row) {
 		num = 0;
 		local = 0;
 		while (local < size) {
-			num += matrix1[row][local] * matrix2[local][col];
+			num += matrix[row][local] * matrix2[local][col];
 			local++;
 		}
 		finalMatrix[row][col] = num;
@@ -68,7 +68,7 @@ void *workMethod(void * rowNum) {
 
 	int i;
 	for (i = startRow; i < startRow + theSize && (int)rowNum < size; i++) {
-		multiplyRow(i);
+		multiplyRow(matrix1, matrix2, (int)rowNum, finalMatrix);
 	}
 
 	return NULL;
@@ -117,9 +117,9 @@ void runThreadedVersion(int numThreads) {
 	printf("Threaded Matrix: \n");
 	printMatrix(finalMatrix);
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("Time to completion: %2.10f\n", cpu_time_used);
+	printf("Time to completion (serial): %2.10f\n", cpu_time_used);
 
-	pthread_exit(NULL);
+
 
 }
 
@@ -134,8 +134,31 @@ int main(int argc, char* argv[]) {
 	printf("Second Matrix\n");
 	printMatrix(matrix2);
 
+	//serial
+
+//	start = clock();
+//	for (i = 0; i < size; i++) {
+//		multiplyRow(matrix1, matrix2, i, finalMatrix);
+//	}
+//	end = clock();
+//	printf("Serial final matrix: \n");
+//	printMatrix(finalMatrix);
+//
+//	//Not a good measure
+//	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+//	printf("Time to completion (serial): %2.10f\n", cpu_time_used);
+
+
+	//Threaded version
+
 	int threads = atoi(argv[1]);
 	runThreadedVersion(threads);
+//	int i;
+//	for (i = 0; i < 5; i++) {
+//		runThreadedVersion(pow(2, i));
+//	}
+
+	//Not a good measure
 
 
 	return 0;

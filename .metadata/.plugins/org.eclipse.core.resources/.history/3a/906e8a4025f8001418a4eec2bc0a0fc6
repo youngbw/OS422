@@ -103,7 +103,7 @@ void runThreadedVersion(int numThreads) {
 	int num = 0;
 	while (totalRowsLeft > 0) {
 		pthread_t thread;
-		pthread_create(&threads[num++], NULL, workMethod, startRow);
+		pthread_create(&threads[num++], NULL, workMethod, (void *)startRow);
 		startRow += theSize;
 		totalRowsLeft -= theSize;
 	}

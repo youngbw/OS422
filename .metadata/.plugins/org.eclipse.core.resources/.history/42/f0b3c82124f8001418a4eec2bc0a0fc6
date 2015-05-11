@@ -15,8 +15,8 @@
 int matrix1[size][size];
 int matrix2[size][size];
 int finalMatrix[size][size]; //for serial
-int totalRowsLeft = size;
-int theSize = size;
+int totalRowsLeft = SIZE_MAX;
+int size = SIZE_MAX;
 int startRow = 0;
 double cpu_time_used;
 clock_t start, end;
@@ -67,7 +67,7 @@ void multiplyRow(int matrix[][size], int matrix2[][size], int row, int finalMatr
 void *workMethod(void * rowNum) {
 
 	int i;
-	for (i = startRow; i < startRow + size && (int)rowNum < size; i++) {
+	for (i = startRow; i < startRow + size && (int)rowNum < SIZE_MAX; i++) {
 		multiplyRow(matrix1, matrix2, (int)rowNum, finalMatrix);
 	}
 
@@ -92,20 +92,16 @@ void loadMatrix(int matrix[][size]) {
 
 void runThreadedVersion(int numThreads) {
 	int i;
-	//reset for next run
-	totalRowsLeft = size;
-	startRow = 0;
-	printf("Number of threads for this run: %d", numThreads);
+	printf("Number of threads for this run: " + numThreads);
 	pthread_t threads[numThreads];
-	theSize = size / numThreads;
+	int size = SIZE_MAX / numThreads;
 
 	start = clock();
-	int num = 0;
 	while (totalRowsLeft > 0) {
 		pthread_t thread;
-		pthread_create(&threads[num++], NULL, workMethod, startRow);
-		startRow += theSize;
-		totalRowsLeft -= theSize;
+		pthread_create(thread, NULL, workMethod, (void *)startRow);
+		startRow += size;
+		totalRowsLeft -= size;
 	}
 
 
@@ -119,7 +115,9 @@ void runThreadedVersion(int numThreads) {
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("Time to completion (serial): %2.10f\n", cpu_time_used);
 
-
+	//reset for next run
+	totalRowsLeft = SIZE_MAX;
+	startRow = 0;
 
 }
 

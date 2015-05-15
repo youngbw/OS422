@@ -8,7 +8,7 @@
 #ifndef CPUQUEUE_H_
 #define CPUQUEUE_H_
 
-#define NR_PHASES 4
+static const int NR_PHASES = 4;
 
 typedef struct job {
 	int job_id;

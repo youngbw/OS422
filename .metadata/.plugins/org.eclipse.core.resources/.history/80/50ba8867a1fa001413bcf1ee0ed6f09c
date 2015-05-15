@@ -1,0 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "Queue.h"
+
+
+Queue* getNewQueue() {
+
+}
+
+Node* performQueueOperation(int isEnqueue);

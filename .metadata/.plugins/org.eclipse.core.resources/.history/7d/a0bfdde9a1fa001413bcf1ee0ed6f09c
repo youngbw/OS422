@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+Queue* getNewQueue() {
+
+	Queue* newQueue = malloc(sizeof(Queue));
+	newQueue->size = 0;
+	return newQueue;
+
+}
+
+job* performQueueOperation(int isEnqueue) {
+
+
+
+
+}
+
+
+
+job* enQueue(job* theJob) {
+
+
+}
+
+
+job* deQueue() {
+
+}

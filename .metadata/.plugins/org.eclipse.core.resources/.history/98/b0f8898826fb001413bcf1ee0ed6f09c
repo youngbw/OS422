@@ -17,7 +17,7 @@ Queue_t* getNewQueue() {
 job* enQueue(Queue_t* theQueue, job* theJob) {
 	pthread_mutex_lock(&theQueue->queueMutex);
 
-	Node_t* theNode = malloc(sizeof(Node_t));
+	struct Node_t* theNode = malloc(sizeof(Node_t));
 	theNode->data = theJob;
 	theQueue->back->next = theNode;
 	theNode->next = NULL;

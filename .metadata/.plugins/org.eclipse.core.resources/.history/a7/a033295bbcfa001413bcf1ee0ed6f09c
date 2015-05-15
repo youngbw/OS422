@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Queue.h"
+
 
 Queue_t* getNewQueue() {
 
@@ -9,6 +9,20 @@ Queue_t* getNewQueue() {
 	newQueue->front = NULL;
 	newQueue->back = NULL;
 	return newQueue;
+
+}
+
+job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
+
+	job* aJob;
+
+	if (isEnqueue == IS_ENQUEUE) {
+		aJob = enQueue(theQueue, theJob);
+	} else {
+		aJob = deQueue(theQueue);
+	}
+
+	return aJob;
 
 }
 
@@ -30,6 +44,7 @@ job* enQueue(Queue_t* theQueue, job* theJob) {
 
 }
 
+
 job* deQueue(Queue_t* theQueue) {
 	job* theJob = NULL;
 	if (!isEmpty(theQueue)) {
@@ -42,22 +57,6 @@ job* deQueue(Queue_t* theQueue) {
 	return theJob;
 
 }
-
-job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
-
-	job* aJob;
-
-	if (isEnqueue == IS_ENQUEUE) {
-		aJob = enQueue(theQueue, theJob);
-	} else {
-		aJob = deQueue(theQueue);
-	}
-
-	return aJob;
-
-}
-
-
 
 int isEmpty(Queue_t* theQueue) {
 

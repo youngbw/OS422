@@ -34,7 +34,7 @@ job* deQueue(Queue_t* theQueue) {
 	job* theJob = NULL;
 	if (!isEmpty(theQueue)) {
 		Node_t* theNode = theQueue->front;
-		theQueue->front = theNode->next;
+		theQueue->front = &theNode->next;
 		theJob = theNode->data;
 		theQueue->size--;
 		free(theNode);

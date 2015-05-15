@@ -11,8 +11,8 @@
 #include <pthread.h>
 #include "CpuQueue.h"
 
-#define IS_ENQUEUE 1
-#define IS_DEQUEUE 0
+static const int IS_ENQUEUE = 1;
+static const int IS_DEQUEUE = 0;
 
 typedef struct Node {
 

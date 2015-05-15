@@ -92,7 +92,7 @@ int main() {
 
 	while (finished == 0) {
 		job* theJob;
-		for(i = 0; i < 8;) {
+		for(i = 0; i < 8; i++) {
 			theJob = cpu[i];
 			if (theJob != NULL && theJob->phasedurations[theJob->current_phase] != 0) {
 				theJob->phasedurations[theJob->current_phase]--;

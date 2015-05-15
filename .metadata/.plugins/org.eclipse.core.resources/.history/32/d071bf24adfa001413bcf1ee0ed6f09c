@@ -8,7 +8,7 @@
 #ifndef QUEUE_H_
 #define QUEUE_H_
 
-#include <pthread.h>
+
 
 static const int IS_ENQUEUE = 1;
 static const int IS_DEQUEUE = 0;
@@ -16,7 +16,6 @@ static const int IS_DEQUEUE = 0;
 
 typedef struct Queue {
 
-	pthread_mutex_t queueMutex;
 	Node* front;
 	Node* back;
 	int size;
@@ -38,8 +37,6 @@ Queue* getNewQueue();
 Node* performQueueOperation(int isEnqueue);
 
 int isEmpty();
-
-int size(Queue* theQueue);
 
 
 #endif /* QUEUE_H_ */

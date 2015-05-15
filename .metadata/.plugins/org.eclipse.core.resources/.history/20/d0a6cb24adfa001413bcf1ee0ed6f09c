@@ -29,7 +29,6 @@ job* performQueueOperation(Queue* theQueue, int isEnqueue, job* theJob) {
 
 
 job* enQueue(Queue* theQueue, job* theJob) {
-	pthread_mutex_lock(&theQueue->queueMutex);
 
 	Node* theNode = malloc(sizeof(Node));
 	theNode->data = theJob;
@@ -38,7 +37,6 @@ job* enQueue(Queue* theQueue, job* theJob) {
 	theQueue->back = theNode;
 	theQueue->size++;
 
-	pthread_mutex_unlock(&theQueue->queueMutex);
 	return theQueue->back;
 
 
@@ -64,8 +62,5 @@ int isEmpty(Queue* theQueue) {
 
 }
 
-int size(Queue* theQueue) {
-	return theQueue->size;
-}
 
 

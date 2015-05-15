@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;schedulersimulator/CPUQueue&apos;" deleteContents="false" description="Delete resource &apos;schedulersimulator/CPUQueue&apos;" element1="/schedulersimulator/CPUQueue" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1431656765785"/>
+</session>

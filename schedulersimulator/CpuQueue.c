@@ -23,7 +23,7 @@ clock_t start_time;
 clock_t end_time;
 
 void* cpuWorkMethod(void* core) {
-	int core_num = (int)core;
+	int core_num = (long)core;
 	job* theJob = cpu[core_num];
 	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 		passJob(theJob);
@@ -56,7 +56,7 @@ job* getJob(int type) {
 }
 
 void* ioWorkMethod(void *core) {
-	int core_num = (int)core;
+	int core_num = (long)core;
 	job* theJob = io[core_num];
 	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 		passJob(theJob);

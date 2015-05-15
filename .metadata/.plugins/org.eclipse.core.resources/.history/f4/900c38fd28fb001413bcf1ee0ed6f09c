@@ -6,7 +6,7 @@ Queue_t* getNewQueue() {
 
 	Queue_t* newQueue = malloc(sizeof(Queue_t));
 	newQueue->size = 0;
-	newQueue->front = newQueue->back;
+	newQueue->front = NULL;
 	newQueue->back = NULL;
 	return newQueue;
 

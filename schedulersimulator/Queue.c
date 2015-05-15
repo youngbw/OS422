@@ -2,17 +2,17 @@
 #include <stdlib.h>
 
 
-Queue* getNewQueue() {
+Queue_t* getNewQueue() {
 
-	Queue* newQueue = malloc(sizeof(Queue));
-	newQueue->size = 0
+	Queue_t* newQueue = malloc(sizeof(Queue_t));
+	newQueue->size = 0;
 	newQueue->front = NULL;
 	newQueue->back = NULL;
 	return newQueue;
 
 }
 
-job* performQueueOperation(Queue* theQueue, int isEnqueue, job* theJob) {
+job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
 
 	job* aJob;
 
@@ -28,10 +28,10 @@ job* performQueueOperation(Queue* theQueue, int isEnqueue, job* theJob) {
 
 
 
-job* enQueue(Queue* theQueue, job* theJob) {
+job* enQueue(Queue_t* theQueue, job* theJob) {
 	pthread_mutex_lock(&theQueue->queueMutex);
 
-	Node* theNode = malloc(sizeof(Node));
+	Node_t* theNode = malloc(sizeof(Node_t));
 	theNode->data = theJob;
 	theQueue->back->next = theNode;
 	theNode->next = NULL;
@@ -45,10 +45,10 @@ job* enQueue(Queue* theQueue, job* theJob) {
 }
 
 
-job* deQueue(Queue* theQueue) {
+job* deQueue(Queue_t* theQueue) {
 	job* theJob = NULL;
 	if (!isEmpty(theQueue)) {
-		Node* theNode = theQueue->front;
+		Node_t* theNode = theQueue->front;
 		theQueue->front = theNode->next;
 		theJob = theNode->data;
 		theQueue->size--;
@@ -58,13 +58,13 @@ job* deQueue(Queue* theQueue) {
 
 }
 
-int isEmpty(Queue* theQueue) {
+int isEmpty(Queue_t* theQueue) {
 
 	return theQueue->size == 0;
 
 }
 
-int size(Queue* theQueue) {
+int size(Queue_t* theQueue) {
 	return theQueue->size;
 }
 

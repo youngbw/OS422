@@ -9,37 +9,41 @@
 #define QUEUE_H_
 
 #include <pthread.h>
+#include "CpuQueue.h"
 
 static const int IS_ENQUEUE = 1;
 static const int IS_DEQUEUE = 0;
 
+typedef struct Node {
+
+	job* data;
+	struct Node_t* next;
+
+
+} Node_t;
 
 typedef struct Queue {
 
 	pthread_mutex_t queueMutex;
-	Node* front;
-	Node* back;
+	Node_t* front;
+	Node_t* back;
 	int size;
 
-} Queue;
+} Queue_t;
 
 
+Queue_t* getNewQueue();
 
-typedef struct Node {
+job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob);
 
-	job* data;
-	Node* next;
+job* deQueue(Queue_t* theQueue);
 
+job* enQueue(Queue_t* theQueue, job* theJob);
 
-} Node;
+int isEmpty(Queue_t* theQueue);
 
-Queue* getNewQueue();
+int size(Queue_t* theQueue);
 
-Node* performQueueOperation(int isEnqueue);
-
-int isEmpty();
-
-int size(Queue* theQueue);
 
 
 #endif /* QUEUE_H_ */

@@ -8,14 +8,25 @@
 #ifndef CPUQUEUE_H_
 #define CPUQUEUE_H_
 
+static const int NR_PHASES = 4;
+
 typedef struct job {
 	int job_id;
 	int nr_phases;
 	int current_phase;
 	// Phase types: 0 = CPU phase; 1 = IO phase
-	int phasetypes[];
-	int phasedurations[];
-	int is_completed = 0;
+	int phasetypes[NR_PHASES];
+	int phasedurations[NR_PHASES];
+	int isCompleted;
 } job;
+
+
+void passJob(job* theJob);
+job* getJob(int type);
+void* cpuWorkMethod(void* core);
+void* ioWorkMethod(void* core);
+void* finWorkMethod(void* core);
+
+
 
 #endif /* CPUQUEUE_H_ */

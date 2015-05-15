@@ -6,23 +6,30 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <Queue.h>
 #include <pthread.h>
+#include "Queue.h"
+#include "CpuQueue.h"
 
-struct job *cpu[8];
-struct job *io[4];
-struct job *fin[4];
 
-CPU_Queue;
-IO_Queue;
-Fin_Queue;
+job *cpu[8];
+job *io[4];
+job *fin[4];
 
-void cpuWorkMethod(void* core_num) {
+Queue_t* CPU_Queue;
+Queue_t* IO_Queue;
+Queue_t* Fin_Queue;
+
+clock_t start_time;
+clock_t end_time;
+
+void* cpuWorkMethod(void* core) {
+	int core_num = (int)core;
 	job* theJob = cpu[core_num];
-	if (theJob->phasedurations[theJob->current_phase] == 0) {
+	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 		passJob(theJob);
-		getJob();
+		cpu[core_num] = getJob(0);
 	}
+	return 0;
 }
 
 void passJob(job* theJob) {
@@ -48,40 +55,59 @@ job* getJob(int type) {
 	}
 }
 
-void ioWorkMethod(void *core_num) {
+void* ioWorkMethod(void *core) {
+	int core_num = (int)core;
 	job* theJob = io[core_num];
-	if (theJob->phasedurations[theJob->current_phase] == 0) {
+	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 		passJob(theJob);
-		getJob();
+		io[core_num] = getJob(1);
 	}
+	return 0;
 }
 
-void finWorkMethod() {
-	getJob();
-	// delete job
+void* finWorkMethod(void* num) {
+	job* theJob = getJob(2);
+	if (theJob != NULL) {
+		free(theJob);
+	}
+	return 0;
 }
 
 int main() {
-	int i;
-
+	long i;
+//	start_time = gmtime(start_time);
 	CPU_Queue = getNewQueue();
 	IO_Queue = getNewQueue();
 	Fin_Queue = getNewQueue();
 
 	pthread_t threads[16];
 	int finished = 0;
-	for(i = 0; i < 8;) {
-		pthread_create(&threads[i], NULL, cpuWorkMethod, NULL);
+	for(i = 0; i < 8; i++) {
+		pthread_create(&threads[i], NULL, cpuWorkMethod, (void *)i);
 		if (i < 4) {
-			pthread_create(&threads[i+8], NULL, ioWorkMethod, NULL);
-			pthread_create(&threads[i+12], NULL, finWorkMethod, NULL);
+			pthread_create(&threads[i+8], NULL, ioWorkMethod, (void *)i);
+			pthread_create(&threads[i+12], NULL, finWorkMethod, (void *)i);
 		}
 	}
 
 	while (finished == 0) {
+		job* theJob;
 		for(i = 0; i < 8;) {
+			theJob = cpu[i];
+			if (theJob != NULL && theJob->phasedurations[theJob->current_phase] != 0) {
+				theJob->phasedurations[theJob->current_phase]--;
+			}
+
 
 			if (i < 4) {
+				theJob = io[i];
+				if (theJob != NULL && theJob->phasedurations[theJob->current_phase] != 0) {
+								theJob->phasedurations[theJob->current_phase]--;
+				}
+				theJob = fin[i];
+				if (theJob != NULL && theJob->phasedurations[theJob->current_phase] != 0) {
+								theJob->phasedurations[theJob->current_phase]--;
+				}
 			}
 		}
 

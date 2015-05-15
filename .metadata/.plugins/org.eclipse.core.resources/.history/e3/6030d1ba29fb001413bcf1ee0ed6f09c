@@ -65,8 +65,12 @@ void multiplyRow(int row) {
 }
 
 void *workMethod(void * rowNum) {
-	long row = (long)rowNum;
 
+<<<<<<< Updated upstream
+	int row = (long)rowNum;
+=======
+	long row = (long)rowNum;
+>>>>>>> Stashed changes
 	int i;
 	for (i = row; i < row + theSize && row < size; i++) {
 		multiplyRow(i);

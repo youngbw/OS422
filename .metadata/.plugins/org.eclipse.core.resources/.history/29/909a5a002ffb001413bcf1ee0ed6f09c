@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "Queue.h"
+
+Queue_t* getNewQueue() {
+
+	Queue_t* newQueue = malloc(sizeof(Queue_t));
+	newQueue->size = 0;
+	newQueue->front = newQueue->back;
+	newQueue->back = NULL;
+	return newQueue;
+
+}
+
+
+
+job* enQueue(Queue_t* theQueue, job* theJob) {
+	pthread_mutex_lock(&theQueue->queueMutex);
+
+	Node_t* theNode = malloc(sizeof(Node_t));
+	theNode->data = theJob;
+	theQueue->back->next = &theNode;
+	theNode->next = NULL;
+	theQueue->back = theNode;
+	theQueue->size++;
+
+	pthread_mutex_unlock(&theQueue->queueMutex);
+	return theQueue->back;
+
+
+}
+
+job* deQueue(Queue_t* theQueue) {
+	job* theJob = NULL;
+	if (!isEmpty(theQueue)) {
+		Node_t* theNode = theQueue->front;
+		theQueue->front = theNode->next;
+		theJob = theNode->data;
+		theQueue->size--;
+		free(theNode);
+	}
+	return theJob;
+
+}
+
+job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
+
+	job* aJob;
+
+	if (isEnqueue == IS_ENQUEUE) {
+		aJob = enQueue(theQueue, theJob);
+	} else {
+		aJob = deQueue(theQueue);
+	}
+
+	return aJob;
+
+}
+
+
+
+int isEmpty(Queue_t* theQueue) {
+
+	return theQueue->size == 0;
+
+}
+
+int size(Queue_t* theQueue) {
+	return theQueue->size;
+}
+
+

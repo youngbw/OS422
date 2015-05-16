@@ -21,7 +21,7 @@ Queue_t* getNewQueue() {
 
 job* enQueue(Queue_t* theQueue, job* theJob) {
 	//printf("Job #%d is entering a Queue\n", theJob->job_id);
-
+	pthread_mutex_lock(&(theQueue->queueMutex));
 	Node *theNode = malloc(sizeof(Node));
 	theNode->next = NULL;
 	theNode->data = theJob;
@@ -34,7 +34,7 @@ job* enQueue(Queue_t* theQueue, job* theJob) {
 	}
 	theQueue->size++;
 
-
+	pthread_mutex_unlock(&(theQueue->queueMutex));
 	return theQueue->back->data;
 
 
@@ -50,7 +50,7 @@ job* deQueue(Queue_t* theQueue) {
 //			free(theQueue->front);
 			theQueue->front = theNode;
 		} else {
-//			free(theQueue->front);
+			free(theQueue->front);
 			theQueue->front = NULL;
 			theQueue->back = NULL;
 		}
@@ -64,7 +64,6 @@ job* deQueue(Queue_t* theQueue) {
 
 job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
 
-	pthread_mutex_lock(&(theQueue->queueMutex));
 	job* aJob;
 
 	if (isEnqueue == IS_ENQUEUE) {
@@ -73,7 +72,6 @@ job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
 		aJob = deQueue(theQueue);
 	}
 
-	pthread_mutex_unlock(&(theQueue->queueMutex));
 	return aJob;
 
 }

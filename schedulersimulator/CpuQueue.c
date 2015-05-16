@@ -24,14 +24,26 @@ Queue_t* Fin_Queue;
 clock_t start_time;
 clock_t end_time;
 
+int finished;
+
 void* cpuWorkMethod(void* core) {
 	int core_num = (long)core;
-	job* theJob = cpu[core_num];
-	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
-		passJob(theJob);
-		printf("Job ID: %d moved off of CPU", theJob->job_id);
-		cpu[core_num] = getJob(0);
-		printf("Job ID: %d started on CPU", cpu[core_num]->job_id);
+	while(finished == 0) {
+		job* theJob = cpu[core_num];
+
+		if (theJob == NULL) {
+			theJob = getJob(0);
+			cpu[core_num] = theJob;
+			if(theJob != NULL){
+				printf("Job ID: %d is starting on CPU %d \n", cpu[core_num]->job_id, core_num);
+			}
+		}
+		if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
+			passJob(theJob);
+			printf("Job ID: %d moved off of CPU %d \n", theJob->job_id, core_num);
+			cpu[core_num] = getJob(0);
+			printf("Job ID: %d started on CPU %d \n", cpu[core_num]->job_id, core_num);
+		}
 	}
 	return 0;
 }
@@ -40,14 +52,14 @@ void passJob(job* theJob) {
 	theJob->current_phase += 1;
 	if(theJob->nr_phases - theJob->current_phase <= 1) {
 		performQueueOperation(Fin_Queue, IS_ENQUEUE, theJob);
-		printf("Job ID: %d moved onto finished queue", theJob->job_id);
+		printf("Job ID: %d moved onto finished queue\n", theJob->job_id);
 	} else {
 		if(theJob->phasetypes[theJob->current_phase]) {
 			performQueueOperation(IO_Queue, IS_ENQUEUE, theJob);
-			printf("Job ID: %d moved onto I/O queue", theJob->job_id);
+			printf("Job ID: %d moved onto I/O queue\n", theJob->job_id);
 		} else {
 			performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
-			printf("Job ID: %d moved onto CPU/Ready queue", theJob->job_id);
+			printf("Job ID: %d moved onto CPU/Ready queue\n", theJob->job_id);
 		}
 	}
 }
@@ -64,43 +76,63 @@ job* getJob(int type) {
 
 void* ioWorkMethod(void *core) {
 	int core_num = (long)core;
-	job* theJob = io[core_num];
-	if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
-		passJob(theJob);
-		printf("Job ID: %d moved off of IO stream", theJob->job_id);
-		io[core_num] = getJob(1);
-		printf("Job ID: %d started on I/O stream", io[core_num]->job_id);
+	while(finished == 0) {
+		job* theJob = io[core_num];
+		if (theJob == NULL) {
+			theJob = getJob(1);
+			io[core_num] = theJob;
+		}
+		if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
+			passJob(theJob);
+			printf("Job ID: %d moved off of IO stream\n", theJob->job_id);
+			io[core_num] = getJob(1);
+			printf("Job ID: %d started on I/O stream\n", io[core_num]->job_id);
+		}
 	}
 	return 0;
 }
 
-void* finWorkMethod(void* num) {
-	job* theJob = getJob(2);
-	if (theJob != NULL) {
-		printf("Freeing memory for Job ID: %d", theJob->job_id);
-		free(theJob);
+void* finWorkMethod(void* core) {
+	int core_num = (long)core;
+	while(finished == 0) {
+		job* theJob = fin[core_num];
+		if (theJob == NULL) {
+			theJob = getJob(2);
+			fin[core_num] = theJob;
+		}
+		if (theJob != NULL) {
+			printf("Freeing memory for Job ID: %d\n", theJob->job_id);
+			free(theJob);
+			fin[core_num] = getJob(2);
+		}
 	}
 	return 0;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	long i;
 //	start_time = gmtime(start_time);
+
 	CPU_Queue = getNewQueue();
 	IO_Queue = getNewQueue();
 	Fin_Queue = getNewQueue();
 
 	pthread_t threads[16];
-	int finished = 0;
+	finished = 0;
 	for(i = 0; i < 8; i++) {
+		printf("Creating thread #%ld!\n", i);
 		pthread_create(&threads[i], NULL, cpuWorkMethod, (void *)i);
 		if (i < 4) {
+			printf("Creating thread #%ld!\n", i+8);
 			pthread_create(&threads[i+8], NULL, ioWorkMethod, (void *)i);
+			printf("Creating thread #%ld!\n", i+12);
 			pthread_create(&threads[i+12], NULL, finWorkMethod, (void *)i);
 		}
+
 	}
 
-	for(i = 0; i < 20; i++) {
+	for(i = 0; i < 10; i++) {
+
 			job* theJob = malloc(sizeof(job));
 			theJob->current_phase = 0;
 			theJob->job_id = i;
@@ -109,10 +141,11 @@ int main() {
 			theJob->phasedurations[1] = 5;
 			theJob->phasedurations[2] = 5;
 			theJob->phasedurations[3] = 5;
-			theJob->phasetypes[0] = 1;
 			theJob->phasetypes[0] = 0;
-			theJob->phasetypes[0] = 1;
-			theJob->phasetypes[0] = 0;
+			theJob->phasetypes[1] = 1;
+			theJob->phasetypes[2] = 0;
+			theJob->phasetypes[3] = 1;
+			printf("Job #%ld created!\n", i);
 			performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
 	}
 

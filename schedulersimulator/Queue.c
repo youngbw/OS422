@@ -20,7 +20,7 @@ Queue_t* getNewQueue() {
 
 
 job* enQueue(Queue_t* theQueue, job* theJob) {
-	printf("Job #%d is entering a Queue\n", theJob->job_id);
+	//printf("Job #%d is entering a Queue\n", theJob->job_id);
 	pthread_mutex_lock(&theQueue->queueMutex);
 	Node *theNode = malloc(sizeof(Node));
 	theNode->next = NULL;
@@ -55,7 +55,7 @@ job* deQueue(Queue_t* theQueue) {
 			theQueue->back = NULL;
 		}
 		theQueue->size--;
-		printf("Job #%d is leaving a queue\n",theJob->job_id);
+		//printf("Job #%d is leaving a queue\n",theJob->job_id);
 		return theJob;
 	}
 	

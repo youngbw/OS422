@@ -41,8 +41,11 @@ void* cpuWorkMethod(void* core) {
 		if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 			passJob(theJob);
 			printf("Job ID: %d moved off of CPU %d \n", theJob->job_id, core_num);
-			cpu[core_num] = getJob(0);
-			printf("Job ID: %d started on CPU %d \n", cpu[core_num]->job_id, core_num);
+			theJob = getJob(0);
+			cpu[core_num] = theJob;
+			if(theJob != NULL){
+				printf("Job ID: %d started on CPU %d \n", cpu[core_num]->job_id, core_num);
+			}
 		}
 	}
 	return 0;
@@ -85,8 +88,11 @@ void* ioWorkMethod(void *core) {
 		if (theJob != NULL && theJob->phasedurations[theJob->current_phase] == 0) {
 			passJob(theJob);
 			printf("Job ID: %d moved off of IO stream\n", theJob->job_id);
-			io[core_num] = getJob(1);
-			printf("Job ID: %d started on I/O stream\n", io[core_num]->job_id);
+			theJob = getJob(1);
+			io[core_num] = theJob;
+			if (theJob != NULL) {
+				printf("Job ID: %d started on I/O stream\n", io[core_num]->job_id);
+			}
 		}
 	}
 	return 0;
@@ -120,18 +126,18 @@ int main(int argc, char* argv[]) {
 	pthread_t threads[16];
 	finished = 0;
 	for(i = 0; i < 8; i++) {
-		printf("Creating thread #%ld!\n", i);
+		//printf("Creating thread #%ld!\n", i);
 		pthread_create(&threads[i], NULL, cpuWorkMethod, (void *)i);
 		if (i < 4) {
-			printf("Creating thread #%ld!\n", i+8);
+			//printf("Creating thread #%ld!\n", i+8);
 			pthread_create(&threads[i+8], NULL, ioWorkMethod, (void *)i);
-			printf("Creating thread #%ld!\n", i+12);
+			//printf("Creating thread #%ld!\n", i+12);
 			pthread_create(&threads[i+12], NULL, finWorkMethod, (void *)i);
 		}
 
 	}
 
-	for(i = 0; i < 10; i++) {
+	for(i = 0; i < 12; i++) {
 
 			job* theJob = malloc(sizeof(job));
 			theJob->current_phase = 0;
@@ -145,7 +151,7 @@ int main(int argc, char* argv[]) {
 			theJob->phasetypes[1] = 1;
 			theJob->phasetypes[2] = 0;
 			theJob->phasetypes[3] = 1;
-			printf("Job #%ld created!\n", i);
+			printf("Job ID: %ld created!\n", i);
 			performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
 	}
 
@@ -182,6 +188,6 @@ int main(int argc, char* argv[]) {
 	for(i = 0; i < 16; i++) {
 		pthread_join(threads[i], NULL);
 	}
-
+	printf("Work complete\n");
 	return 0;
 }

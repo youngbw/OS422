@@ -42,6 +42,8 @@ job* deQueue(Queue_t* theQueue);
 
 job* enQueue(Queue_t* theQueue, job* theJob);
 
+int hasElems(Queue_t* theQueue);
+
 int isEmpty(Queue_t* theQueue);
 
 int size(Queue_t* theQueue);

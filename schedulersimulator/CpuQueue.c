@@ -25,9 +25,17 @@ clock_t start_time;
 clock_t end_time;
 
 int finished;
+//job id being incremented
+int jobId;
+//Target amount of jobs
+int amountOfJobs = 12;
+//Last time a job was created
+double lastTime;
+//Amount of seconds to inject jobs
+int targetSeconds = 2;
 
 void* cpuWorkMethod(void* core) {
-	int core_num = (long)core;
+	int core_num = (int)(long)core;
 	while(finished == 0) {
 		job* theJob = cpu[core_num];
 
@@ -78,7 +86,7 @@ job* getJob(int type) {
 }
 
 void* ioWorkMethod(void *core) {
-	int core_num = (long)core;
+	int core_num = (int)(long)core;
 	while(finished == 0) {
 		job* theJob = io[core_num];
 		if (theJob == NULL) {
@@ -99,7 +107,7 @@ void* ioWorkMethod(void *core) {
 }
 
 void* finWorkMethod(void* core) {
-	int core_num = (long)core;
+	int core_num = (int)(long)core;
 	while(finished == 0) {
 		job* theJob = fin[core_num];
 		if (theJob == NULL) {
@@ -112,11 +120,34 @@ void* finWorkMethod(void* core) {
 			fin[core_num] = getJob(2);
 		}
 	}
+
 	return 0;
+}
+
+job* createJob() {
+	job* theJob = malloc(sizeof(job));
+	theJob->current_phase = 0;
+	theJob->job_id = jobId;
+	theJob->nr_phases = 4;
+	theJob->phasedurations[0] = 5;
+	theJob->phasedurations[1] = 5;
+	theJob->phasedurations[2] = 5;
+	theJob->phasedurations[3] = 5;
+	theJob->phasetypes[0] = 0;
+	theJob->phasetypes[1] = 1;
+	theJob->phasetypes[2] = 0;
+	theJob->phasetypes[3] = 1;
+
+    jobId++;
+    lastTime = clock();
+
+    printf("Job ID: %i created!\n", theJob->job_id);
+	return theJob;
 }
 
 int main(int argc, char* argv[]) {
 	long i;
+    lastTime = clock();
 //	start_time = gmtime(start_time);
 
 	CPU_Queue = getNewQueue();
@@ -137,22 +168,10 @@ int main(int argc, char* argv[]) {
 
 	}
 
+    //Creating jobs
 	for(i = 0; i < 12; i++) {
-
-			job* theJob = malloc(sizeof(job));
-			theJob->current_phase = 0;
-			theJob->job_id = i;
-			theJob->nr_phases = 4;
-			theJob->phasedurations[0] = 5;
-			theJob->phasedurations[1] = 5;
-			theJob->phasedurations[2] = 5;
-			theJob->phasedurations[3] = 5;
-			theJob->phasetypes[0] = 0;
-			theJob->phasetypes[1] = 1;
-			theJob->phasetypes[2] = 0;
-			theJob->phasetypes[3] = 1;
-			printf("Job ID: %ld created!\n", i);
-			performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
+        job* theJob = createJob();
+        performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
 	}
 
 	while (finished == 0) {

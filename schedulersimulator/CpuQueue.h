@@ -23,6 +23,7 @@ typedef struct job {
 
 
 void passJob(job* theJob);
+job* createJob();
 job* getJob(int type);
 void* cpuWorkMethod(void* core);
 void* ioWorkMethod(void* core);

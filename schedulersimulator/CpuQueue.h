@@ -10,6 +10,7 @@
 
 #define NR_PHASES 4
 
+struct job;
 typedef struct job {
 	int job_id;
 	int nr_phases;

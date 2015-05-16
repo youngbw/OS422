@@ -2,7 +2,8 @@
  * CpuQueue.c
  *
  *  Created on: May 14, 2015
- *      Author: BrentYoung
+ *      Author: Brent Young
+ *		Author: Jonathan Stone
  */
 #include <stdio.h>
 #include <stdlib.h>

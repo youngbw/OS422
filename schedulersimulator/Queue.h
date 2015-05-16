@@ -1,7 +1,8 @@
 /*
  * Queue.h
  * Created on: May 14, 2015
- * Author: BrentYoung
+ * Author: Brent Young
+ * Author: Jonathan Stone
  */
 
 
@@ -14,19 +15,20 @@
 #define IS_ENQUEUE 1
 #define IS_DEQUEUE 0
 
+struct Node;
 typedef struct Node {
 
 	job* data;
-	struct Node_t* next;
+	struct Node* next;
 
 
-} Node_t;
+} Node;
 
 typedef struct Queue {
 
 	pthread_mutex_t queueMutex;
-	Node_t* front;
-	Node_t* back;
+	struct Node* front;
+	struct Node* back;
 	int size;
 
 } Queue_t;

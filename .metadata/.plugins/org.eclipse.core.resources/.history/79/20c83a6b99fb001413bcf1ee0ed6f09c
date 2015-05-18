@@ -1,0 +1,106 @@
+/*
+ * Queue.h
+ * Created on: May 14, 2015
+ * Author: Brent Young
+ * Author: Jonathan Stone
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "Queue.h"
+
+Queue_t* getNewQueue() {
+	Queue_t* newQueue = malloc(sizeof(Queue_t));
+	newQueue->size = 0;
+	newQueue->front = newQueue->back = NULL;
+	return newQueue;
+
+}
+
+
+
+job* enQueue(Queue_t* theQueue, job* theJob) {
+	//printf("Job #%d is entering a Queue\n", theJob->job_id);
+
+	Node *theNode = malloc(sizeof(Node));
+	theNode->next = NULL;
+	theNode->data = theJob;
+
+	if(theQueue->front == NULL && theQueue->back == NULL) {
+		theQueue->front = theQueue->back = theNode;	
+	} else {
+		theQueue->back->next = theNode;
+		theQueue->back = theNode;
+	}
+	theQueue->size++;
+
+
+	return theQueue->back->data;
+
+
+}
+
+job* deQueue(Queue_t* theQueue) {
+	job* theJob = NULL;
+	if (hasElems(theQueue)) {
+		Node* theNode = theQueue->front;
+		theJob = theNode->data;
+		theNode->data = NULL;
+		if (theNode->next != NULL) {
+			Node* nextNode = theNode->next;
+//			free(theQueue->front);
+			theQueue->front = nextNode;
+			theNode->next = NULL;
+		} else {
+//			free(theQueue->front);
+			theQueue->front = NULL;
+			theQueue->back = NULL;
+		}
+		free(theNode);
+		theQueue->size--;
+		//printf("Job #%d is leaving a queue\n",theJob->job_id);
+	}
+	
+	return theJob;
+
+}
+
+job* performQueueOperation(Queue_t* theQueue, int isEnqueue, job* theJob) {
+
+	pthread_mutex_lock(&(theQueue->queueMutex));
+	job* aJob;
+
+	if (isEnqueue == IS_ENQUEUE) {
+		aJob = enQueue(theQueue, theJob);
+	} else {
+		aJob = deQueue(theQueue);
+	}
+
+	pthread_mutex_unlock(&(theQueue->queueMutex));
+	return aJob;
+
+}
+
+
+
+int hasElems(Queue_t* theQueue) {
+	if (theQueue->size == 0) {
+		return 0;
+	} else {
+		return 1;
+	}
+
+}
+
+int isEmpty(Queue_t* theQueue) {
+	if (theQueue->size == 0) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+int size(Queue_t* theQueue) {
+	return theQueue->size;
+}
+

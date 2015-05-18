@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/CPATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/CPATH/operation=append
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/CPATH/value=${HOME}/hpc-gcc/include
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/LIBRARY_PATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/LIBRARY_PATH/operation=append
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/LIBRARY_PATH/value=${HOME}/hpc-gcc/lib
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/PATH/delimiter=\:
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/PATH/operation=replace
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/PATH/value=${HOME}/hpc-gcc/bin\:${MINGW_HOME}/bin\:${MSYS_HOME}/bin\:/usr/bin\:/bin\:/usr/sbin\:/sbin
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/append=true
+environment/project/cdt.managedbuild.config.gnu.macosx.exe.debug.2016300318/appendContributed=true

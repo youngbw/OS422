@@ -2,7 +2,8 @@
  * main.c
  *
  *  Created on: Apr 29, 2015
- *      Author: BrentYoung
+ *      Author: Brent Young
+ *	Author: Jonathan Stone
  */
 
 #include "main.h"

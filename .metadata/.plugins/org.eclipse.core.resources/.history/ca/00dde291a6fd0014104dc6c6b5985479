@@ -32,7 +32,7 @@ int amountOfJobs = 12;
 //Last time a job was created
 double lastTime;
 //Amount of seconds to inject jobs
-int targetSeconds = 2;
+int targetSeconds = 10;
 //Number of total jobs created
 int numJobsCreated = 0;
 //Number of jobs successfully completed and memory freed
@@ -59,7 +59,7 @@ void* cpuWorkMethod(void* core) {
 				printf("Job ID: %d started on CPU %d \n", cpu[core_num]->job_id, core_num);
 			}
 		}
-		sleep(1);
+//		sleep(1);
 	}
 	return 0;
 }
@@ -107,7 +107,7 @@ void* ioWorkMethod(void *core) {
 				printf("Job ID: %d started on I/O stream\n", io[core_num]->job_id);
 			}
 		}
-		sleep(1);
+//		sleep(1);
 	}
 	return 0;
 }
@@ -128,16 +128,15 @@ void* finWorkMethod(void* core) {
 		} else {
 			performQueueOperation(CPU_Queue, IS_ENQUEUE, theJob);
 		}
-		sleep(1);
+//		sleep(1);
 	}
 
 	return 0;
 }
 
 job* createJob() {
-	double targetTime = lastTime + targetSeconds * CLOCKS_PER_SEC;
-	double currentTime = clock();
-	if ( currentTime >= targetTime || numJobsCreated < amountOfJobs) {
+	double targetTime = clock() + targetSeconds * CLOCKS_PER_SEC;
+	if ( targetTime >= lastTime + targetSeconds || numJobsCreated < amountOfJobs) {
 		numJobsCreated++;
 		job* theJob = malloc(sizeof(job));
 		theJob->current_phase = 0;
@@ -153,7 +152,7 @@ job* createJob() {
 		theJob->phasetypes[3] = 1;
 
     		jobId++;
-    		lastTime = currentTime;
+    		lastTime = targetTime;
 
     		printf("Job ID: %i created!\n", theJob->job_id);
     		return theJob;

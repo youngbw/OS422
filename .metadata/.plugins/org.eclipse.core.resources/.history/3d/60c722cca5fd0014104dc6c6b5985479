@@ -135,9 +135,8 @@ void* finWorkMethod(void* core) {
 }
 
 job* createJob() {
-	double targetTime = lastTime + targetSeconds * CLOCKS_PER_SEC;
-	double currentTime = clock();
-	if ( currentTime >= targetTime || numJobsCreated < amountOfJobs) {
+	double targetTime = clock() + targetSeconds * CLOCKS_PER_SEC;
+	if ( targetTime >= lastTime + targetSeconds || numJobsCreated < amountOfJobs) {
 		numJobsCreated++;
 		job* theJob = malloc(sizeof(job));
 		theJob->current_phase = 0;
@@ -153,7 +152,7 @@ job* createJob() {
 		theJob->phasetypes[3] = 1;
 
     		jobId++;
-    		lastTime = currentTime;
+    		lastTime = targetTime;
 
     		printf("Job ID: %i created!\n", theJob->job_id);
     		return theJob;

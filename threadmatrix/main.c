@@ -26,7 +26,7 @@ int gen_rand(int num) {
 		srand(10);
 		return rand() % 10 + 1;
 	} else {
-		return num * 7 / 3 % 10 + 1;
+		return rand() % 10 + 1;
 	}
 
 

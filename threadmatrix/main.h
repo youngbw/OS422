@@ -9,7 +9,7 @@
 #define MAIN_H_
 
 
-#define size 4
+#define size 2000
 
 int gen_rand(int num);
 

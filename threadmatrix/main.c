@@ -2,7 +2,8 @@
  * main.c
  *
  *  Created on: Apr 29, 2015
- *      Author: BrentYoung
+ *      Author: Brent Young
+ *	Author: Jonathan Stone
  */
 
 #include "main.h"
@@ -26,7 +27,7 @@ int gen_rand(int num) {
 		srand(10);
 		return rand() % 10 + 1;
 	} else {
-		return num * 7 / 3 % 10 + 1;
+		return rand() % 10 + 1;
 	}
 
 
